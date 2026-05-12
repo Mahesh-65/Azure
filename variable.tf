@@ -46,3 +46,27 @@ variable "admin_password" {
 variable "zone" {
   type = string
 }
+
+variable "private_subnet_name" {
+  type = string
+}
+
+variable "nat_public_ip_name" {
+  type = string
+}
+
+variable "nat_gateway_name" {
+  type = string
+}
+
+variable "private_nsg_name" {
+  type = string
+}
+
+variable "private_nic_name" {
+  type = string
+}
+
+variable "private_vm_name" {
+  type = string
+}
