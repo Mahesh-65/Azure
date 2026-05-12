@@ -267,7 +267,7 @@ resource "azurerm_lb_rule" "http_rule" {
   name = "http-rule"
   protocol = "Tcp"
   frontend_port = 80
-  backend_port = 80
+  backend_port = 5656
   frontend_ip_configuration_name = "lb-frontend"
 
   backend_address_pool_ids = [
