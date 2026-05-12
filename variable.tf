@@ -70,3 +70,11 @@ variable "private_nic_name" {
 variable "private_vm_name" {
   type = string
 }
+
+variable "lb_name" {
+  type = string
+}
+
+variable "lb_public_ip_name" {
+  type = string
+}

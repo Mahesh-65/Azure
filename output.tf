@@ -13,3 +13,7 @@ output "private_vm_private_ip" {
 output "nat_gateway_public_ip" {
   value = azurerm_public_ip.nat_pip.ip_address
 }
+
+output "load_balancer_public_ip" {
+  value = azurerm_public_ip.lb_pip.ip_address
+}
