@@ -2,13 +2,15 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "4.71.0"
+      version = "4.67.0"
     }
   }
 }
 
 provider "azurerm" {
   features {}
+
+  resource_provider_registrations = "none"
 }
 
 resource "azurerm_resource_group" "rg" {
@@ -63,7 +65,6 @@ resource "azurerm_network_security_group" "nsg" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
-  # Allow SSH
   security_rule {
     name                       = "Allow-SSH"
     priority                   = 100
@@ -76,7 +77,6 @@ resource "azurerm_network_security_group" "nsg" {
     destination_address_prefix = "*"
   }
 
-  # Allow ICMP within VNets
   security_rule {
     name                       = "Allow-ICMP"
     priority                   = 110
@@ -155,8 +155,8 @@ resource "azurerm_linux_virtual_machine" "vm_a" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = var.vm_size
+  zone = "2"
   admin_username      = var.admin_username
-  zone                = "2"
 
   network_interface_ids = [
     azurerm_network_interface.nic_a.id
@@ -185,8 +185,8 @@ resource "azurerm_linux_virtual_machine" "vm_b" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = var.vm_size
+  zone = "2"
   admin_username      = var.admin_username
-  zone                = "2"
 
   network_interface_ids = [
     azurerm_network_interface.nic_b.id
@@ -215,8 +215,8 @@ resource "azurerm_linux_virtual_machine" "vm_c" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = var.vm_size
+  zone = "2"
   admin_username      = var.admin_username
-  zone                = "2"
 
   network_interface_ids = [
     azurerm_network_interface.nic_c.id
@@ -240,10 +240,15 @@ resource "azurerm_linux_virtual_machine" "vm_c" {
   }
 }
 
-# Non-Transitive VNet Peerings
-# VNet-A <--> VNet-B
+# VNet Peering
 
 resource "azurerm_virtual_network_peering" "a_to_b" {
+
+  depends_on = [
+    azurerm_virtual_network.vnet_a,
+    azurerm_virtual_network.vnet_b
+  ]
+
   name                      = "a-to-b"
   resource_group_name       = azurerm_resource_group.rg.name
   virtual_network_name      = azurerm_virtual_network.vnet_a.name
@@ -253,6 +258,12 @@ resource "azurerm_virtual_network_peering" "a_to_b" {
 }
 
 resource "azurerm_virtual_network_peering" "b_to_a" {
+
+  depends_on = [
+    azurerm_virtual_network.vnet_a,
+    azurerm_virtual_network.vnet_b
+  ]
+
   name                      = "b-to-a"
   resource_group_name       = azurerm_resource_group.rg.name
   virtual_network_name      = azurerm_virtual_network.vnet_b.name
@@ -261,9 +272,13 @@ resource "azurerm_virtual_network_peering" "b_to_a" {
   allow_virtual_network_access = true
 }
 
-# VNet-B <--> VNet-C
-
 resource "azurerm_virtual_network_peering" "b_to_c" {
+
+  depends_on = [
+    azurerm_virtual_network.vnet_b,
+    azurerm_virtual_network.vnet_c
+  ]
+
   name                      = "b-to-c"
   resource_group_name       = azurerm_resource_group.rg.name
   virtual_network_name      = azurerm_virtual_network.vnet_b.name
@@ -273,6 +288,12 @@ resource "azurerm_virtual_network_peering" "b_to_c" {
 }
 
 resource "azurerm_virtual_network_peering" "c_to_b" {
+
+  depends_on = [
+    azurerm_virtual_network.vnet_b,
+    azurerm_virtual_network.vnet_c
+  ]
+
   name                      = "c-to-b"
   resource_group_name       = azurerm_resource_group.rg.name
   virtual_network_name      = azurerm_virtual_network.vnet_c.name
