@@ -13,7 +13,7 @@ variable "resource_group_name" {
 variable "vm_size" {
   description = "Azure VM Size"
   type        = string
-  default     = "Standard_D2s_v5"
+  default     = "Standard_DC1ds_v3"
 }
 
 variable "admin_username" {
