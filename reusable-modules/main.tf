@@ -78,7 +78,8 @@ module "alert" {
 module "monitor" {
   source = "./custom-modules/monitor"
 
-  vmss_id = module.vm_scale_set.vmss_id
+  resource_group_name = module.resource_group.resource_group_name
+  location            = module.resource_group.location
 }
 
 module "service_bus" {

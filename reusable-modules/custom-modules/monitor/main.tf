@@ -1,10 +1,7 @@
-resource "azurerm_monitor_diagnostic_setting" "monitor" {
-  name               = "vmss-monitor"
-  target_resource_id = var.vmss_id
-
-  metric {
-    category = "AllMetrics"
-
-    enabled = true
-  }
+resource "azurerm_log_analytics_workspace" "law" {
+  name                = "vmss-law-workspace"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
 }
