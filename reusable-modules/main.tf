@@ -51,6 +51,17 @@ module "vm_scale_set" {
   backend_pool_id = module.load_balancer.backend_pool_id
 }
 
+module "network_security_group" {
+
+  source = "./custom-modules/network-security-group"
+
+  nsg_name           = "vmss-nsg"
+  location           = module.resource_group.location
+  resource_group_name = module.resource_group.resource_group_name
+
+  subnet_id = module.subnet.subnet_id
+}
+
 module "autoscale" {
   source = "./custom-modules/autoscale"
 
