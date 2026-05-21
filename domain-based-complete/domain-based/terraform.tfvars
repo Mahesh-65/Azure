@@ -1,0 +1,5 @@
+location = "Central India"
+resource_group_name = "Mahesh-RG"
+admin_username = "Mahesh"
+admin_password = "Mahesh@050903"
+domain_name = "maheshrevs.online"
