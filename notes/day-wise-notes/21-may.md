@@ -1,3 +1,4 @@
+# Day 14 (21-05-2026)
 # Domain Based Routing with Application Gateway WAF + Private VMs + NAT Gateway
 
 # Domains
